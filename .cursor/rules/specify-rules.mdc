@@ -1,0 +1,24 @@
+# hello-sdd-chatagent Development Guidelines
+
+Auto-generated from all feature plans. Last updated: 2025-09-26
+
+## Active Technologies
+- Python 3.12+ with async-first design + FastAPI (async), Chainlit (UI), OpenAI Agents SDK (agent logic), Gemini (LLM), uv (package management) (001-develop-a-scoped)
+
+## Project Structure
+```
+src/
+tests/
+```
+
+## Commands
+cd src [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLOGIES] pytest [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLOGIES] ruff check .
+
+## Code Style
+Python 3.12+ with async-first design: Follow standard conventions
+
+## Recent Changes
+- 001-develop-a-scoped: Added Python 3.12+ with async-first design + FastAPI (async), Chainlit (UI), OpenAI Agents SDK (agent logic), Gemini (LLM), uv (package management)
+
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->

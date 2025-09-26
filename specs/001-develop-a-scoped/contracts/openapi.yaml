@@ -1,0 +1,186 @@
+openapi: 3.0.3
+info:
+  title: ChatWait API
+  description: Dual-mode conversational chatbot service with synchronous and streaming endpoints
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+
+paths:
+  /chat/wait:
+    post:
+      summary: Synchronous chat endpoint
+      description: |
+        Accepts a user message and returns a complete response after generation is finished.
+        Used for traditional request/response style interactions where users want immediate,
+        complete answers without streaming.
+      operationId: chatWait
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        '200':
+          description: Successful response with complete message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        '400':
+          description: Bad request - invalid input format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /chat/streaming:
+    get:
+      summary: Streaming chat endpoint
+      description: |
+        Establishes a Server-Sent Events connection for streaming response tokens
+        as they are generated. Supports reconnection and resumption from last token.
+      operationId: chatStreaming
+      parameters:
+        - name: message
+          in: query
+          required: true
+          description: The user message to process
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 10000
+        - name: context_id
+          in: query
+          required: false
+          description: Optional context ID for conversation continuity
+          schema:
+            type: string
+            format: uuid
+        - name: last_token_index
+          in: query
+          required: false
+          description: For reconnection - resume from this token index
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: Successful streaming response
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                description: Server-Sent Events stream with token data
+              example: |
+                data: {"token": "Hello", "token_index": 0, "context_id": "123e4567-e89b-12d3-a456-426614174000"}
+
+                data: {"token": " ", "token_index": 1, "context_id": "123e4567-e89b-12d3-a456-426614174000"}
+
+                data: {"token": "world", "token_index": 2, "context_id": "123e4567-e89b-12d3-a456-426614174000"}
+
+                data: {"type": "end", "context_id": "123e4567-e89b-12d3-a456-426614174000"}
+        '400':
+          description: Bad request - invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    ChatRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: The user's message
+          minLength: 1
+          maxLength: 10000
+        context_id:
+          type: string
+          format: uuid
+          description: Optional context ID for conversation continuity
+
+    ChatResponse:
+      type: object
+      required:
+        - message
+        - context_id
+      properties:
+        message:
+          type: string
+          description: The complete system response
+        context_id:
+          type: string
+          format: uuid
+          description: Context ID for this conversation session
+        token_count:
+          type: integer
+          description: Number of tokens in the response
+        processing_time_ms:
+          type: number
+          description: Time taken to generate response in milliseconds
+
+    ErrorResponse:
+      type: object
+      required:
+        - error_code
+        - message
+      properties:
+        error_code:
+          type: string
+          description: Machine-readable error identifier
+          example: "INVALID_INPUT"
+        message:
+          type: string
+          description: Human-readable error message
+          example: "Message content is required and must be between 1 and 10000 characters"
+
+    StreamEvent:
+      type: object
+      properties:
+        token:
+          type: string
+          description: The response token
+        token_index:
+          type: integer
+          description: Sequential index of this token
+        context_id:
+          type: string
+          format: uuid
+          description: Context ID for this conversation
+        type:
+          type: string
+          enum: [token, end, error]
+          description: Event type
+          default: token
