@@ -47,7 +47,23 @@
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+**Code Quality Gates:**
+- All code MUST use strong typing with type hints and strict type checking
+- Minimum 80% test coverage required with proper mocking for external dependencies
+- All linters (ruff, mypy, eslint) MUST pass with zero violations
+- Tests MUST be written before implementation (TDD)
+
+**Architecture Gates:**
+- All FastAPI endpoints MUST be async functions
+- Clear separation between UI (Chainlit), Agent logic (OpenAI Agents SDK), and API layers
+- Async database drivers and HTTP clients MUST be used
+- Response times under 200ms for 95th percentile
+
+**Security Gates:**
+- API keys and credentials MUST NEVER be exposed in responses or logs
+- Input validation and sanitization MUST be implemented
+- Comprehensive error handling without exposing internal details
+- Streaming connections MUST be resilient to disconnects with retry logic
 
 ## Project Structure
 
@@ -216,4 +232,4 @@ directories captured above]
 - [ ] Complexity deviations documented
 
 ---
-*Based on Constitution v2.1.1 - See `/memory/constitution.md`*
+*Based on Constitution v1.0.0 - See `/memory/constitution.md`* 
