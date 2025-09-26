@@ -40,86 +40,86 @@
 - All paths relative to repository root
 
 ## Phase 3.1: Setup
-- [ ] T001 Create project structure with backend/src/ and frontend/ directories
-- [ ] T002 Initialize Python 3.12+ project with uv and FastAPI dependencies
-- [ ] T003 [P] Configure linting and formatting tools (ruff, mypy, pre-commit)
-- [ ] T004a Set up environment configuration with .env support in backend/.env
-- [ ] T004b Create FastAPI application factory with lifespan management in backend/src/app.py
-- [ ] T004c Configure CORS middleware for browser compatibility in backend/src/middleware/cors.py
-- [ ] T004d Set up logging middleware for request/response tracking in backend/src/middleware/logging.py
-- [ ] T004e Implement health check endpoint for production monitoring in backend/src/api/health.py
+- [x] T001 Create project structure with backend/src/ and frontend/ directories
+- [x] T002 Initialize Python 3.12+ project with uv and FastAPI dependencies
+- [x] T003 [P] Configure linting and formatting tools (ruff, mypy, pre-commit)
+- [x] T004a Set up environment configuration with .env support in backend/.env
+- [x] T004b Create FastAPI application factory with lifespan management in backend/src/app.py
+- [x] T004c Configure CORS middleware for browser compatibility in backend/src/middleware/cors.py
+- [x] T004d Set up logging middleware for request/response tracking in backend/src/middleware/logging.py
+- [x] T004e Implement health check endpoint for production monitoring in backend/src/api/health.py
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
 
 ### Contract Tests (API Schema Validation)
-- [ ] T005 [P] Contract test POST /chat/wait in tests/contract/test_chat_wait.py
-- [ ] T006 [P] Contract test GET /chat/streaming in tests/contract/test_chat_streaming.py
-- [ ] T007 [P] Contract test error responses in tests/contract/test_error_handling.py
-- [ ] T008 [P] Integration test streaming reconnection in tests/integration/test_streaming_resilience.py
+- [x] T005 [P] Contract test POST /chat/wait in tests/contract/test_chat_wait.py
+- [x] T006 [P] Contract test GET /chat/streaming in tests/contract/test_chat_streaming.py
+- [x] T007 [P] Contract test error responses in tests/contract/test_error_handling.py
+- [x] T008 [P] Integration test streaming reconnection in tests/integration/test_streaming_resilience.py
 
 ### Data Model Tests
-- [ ] T009 [P] ChatMessage model validation tests in tests/unit/test_models.py
-- [ ] T010 [P] ConversationContext model tests in tests/unit/test_models.py
-- [ ] T011 [P] StreamConnection model tests in tests/unit/test_models.py
+- [x] T009 [P] ChatMessage model validation tests in tests/unit/test_models.py
+- [x] T010 [P] ConversationContext model tests in tests/unit/test_models.py
+- [x] T011 [P] StreamConnection model tests in tests/unit/test_models.py
 
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
 
 ### Data Models
-- [ ] T012 [P] Implement ChatMessage Pydantic model in backend/src/models/chat_models.py
-- [ ] T013 [P] Implement ConversationContext Pydantic model in backend/src/models/chat_models.py
-- [ ] T014 [P] Implement StreamConnection Pydantic model in backend/src/models/chat_models.py
+- [x] T012 [P] Implement ChatMessage Pydantic model in backend/src/models/chat_models.py
+- [x] T013 [P] Implement ConversationContext Pydantic model in backend/src/models/chat_models.py
+- [x] T014 [P] Implement StreamConnection Pydantic model in backend/src/models/chat_models.py
 
 ### Agent Integration
-- [ ] T015a Set up environment configuration and .env file with API keys in backend/.env
-- [ ] T015b Implement AsyncOpenAI client setup with Gemini endpoint in backend/src/services/llm_service.py
-- [ ] T015c Configure OpenAIChatCompletionsModel with gemini-2.5-flash in backend/src/services/llm_service.py
-- [ ] T015d Create ChatAgent with proper instructions and model in backend/src/services/chat_agent.py
-- [ ] T015e Implement agent execution wrapper with error handling in backend/src/services/chat_agent.py
-- [ ] T017 [P] Unit test ChatAgent with "hello" input in tests/unit/test_chat_agent.py
+- [x] T015a Set up environment configuration and .env file with API keys in backend/.env
+- [x] T015b Implement AsyncOpenAI client setup with Gemini endpoint in backend/src/services/llm_service.py
+- [x] T015c Configure OpenAIChatCompletionsModel with gemini-2.5-flash in backend/src/services/llm_service.py
+- [x] T015d Create ChatAgent with proper instructions and model in backend/src/services/chat_agent.py
+- [x] T015e Implement agent execution wrapper with error handling in backend/src/services/chat_agent.py
+- [x] T017 [P] Unit test ChatAgent with "hello" input in tests/unit/test_chat_agent.py
 
 ### API Endpoints
-- [ ] T018a Implement /chat/wait endpoint structure with Pydantic request/response models in backend/src/api/chat.py
-- [ ] T018b Implement synchronous agent execution with Runner.run_sync() in /chat/wait endpoint
-- [ ] T018c Add error handling and response formatting for /chat/wait endpoint
-- [ ] T019a Set up FastAPI SSE streaming endpoint structure with proper headers in backend/src/api/chat.py
-- [ ] T019b Implement SDK event processing loop with ResponseTextDeltaEvent handling
-- [ ] T019c Add stream completion detection and final_output formatting
-- [ ] T019d Implement connection lifecycle management and error event streaming
-- [ ] T019e Add reconnection support with token index tracking in streaming endpoint
-- [ ] T020 Implement error handling middleware in backend/src/api/errors.py
-- [ ] T021 Implement input validation middleware in backend/src/api/validation.py
+- [x] T018a Implement /chat/wait endpoint structure with Pydantic request/response models in backend/src/routers/chat.py
+- [x] T018b Implement synchronous agent execution with Runner.run_sync() in /chat/wait endpoint
+- [x] T018c Add error handling and response formatting for /chat/wait endpoint
+- [x] T019a Set up FastAPI SSE streaming endpoint structure with proper headers in backend/src/routers/chat.py
+- [x] T019b Implement SDK event processing loop with ResponseTextDeltaEvent handling
+- [x] T019c Add stream completion detection and final_output formatting
+- [x] T019d Implement connection lifecycle management and error event streaming
+- [x] T019e Add reconnection support with token index tracking in streaming endpoint
+- [x] T020 Implement error handling middleware in backend/src/api/errors.py
+- [x] T021 Implement input validation middleware in backend/src/api/validation.py
 
 ### Error Handling
-- [ ] T022 Implement error response schemas in backend/src/schemas/error_schemas.py
-- [ ] T023 [P] Unit test error handling for malformed requests in tests/unit/test_error_handling.py
-- [ ] T024 [P] Unit test streaming reconnection logic in tests/unit/test_streaming.py
+- [x] T022 Implement error response schemas in backend/src/schemas/error_schemas.py
+- [x] T023 [P] Unit test error handling for malformed requests in tests/unit/test_error_handling.py
+- [x] T024 [P] Unit test streaming reconnection logic in tests/unit/test_streaming.py
 
 ## Phase 3.4: Integration & UI
-- [ ] T025a Implement streaming event formatter for SDK ResponseTextDeltaEvent in backend/src/services/streaming_service.py
-- [ ] T025b Create stream completion detection and final_output handling in backend/src/services/streaming_service.py
-- [ ] T025c Add connection state tracking and cleanup for abandoned streams in backend/src/services/streaming_service.py
-- [ ] T026a Implement token index persistence for reconnection support in backend/src/services/streaming_service.py
-- [ ] T026b Add reconnection state recovery logic in streaming service
-- [ ] T026c Create error event streaming for client notification
-- [ ] T027a Set up Chainlit application structure with session management in frontend/app.py
-- [ ] T027b Implement dual mode selection UI (wait vs streaming) in frontend/modes/mode_selector.py
-- [ ] T027c Add environment configuration for Chainlit-FastAPI integration
-- [ ] T028a Implement Chainlit wait mode with POST /chat/wait integration in frontend/modes/wait_mode.py
-- [ ] T028b Add request/response handling and error display for wait mode
-- [ ] T028c Implement loading states and user feedback for wait mode
-- [ ] T029a Implement Chainlit streaming mode with SSE /chat/streaming integration in frontend/modes/streaming_mode.py
-- [ ] T029b Add EventSource connection management and reconnection handling
-- [ ] T029c Implement token-by-token message rendering with proper formatting
-- [ ] T030 [P] Integration test end-to-end chat flow in tests/integration/test_e2e_flow.py
+- [x] T025a Implement streaming event formatter for SDK ResponseTextDeltaEvent in backend/src/services/streaming_service.py
+- [x] T025b Create stream completion detection and final_output handling in backend/src/services/streaming_service.py
+- [x] T025c Add connection state tracking and cleanup for abandoned streams in backend/src/services/streaming_service.py
+- [x] T026a Implement token index persistence for reconnection support in backend/src/services/streaming_service.py
+- [x] T026b Add reconnection state recovery logic in streaming service
+- [x] T026c Create error event streaming for client notification
+- [x] T027a Set up Chainlit application structure with session management in frontend/app.py
+- [x] T027b Implement dual mode selection UI (wait vs streaming) in frontend/modes/mode_selector.py
+- [x] T027c Add environment configuration for Chainlit-FastAPI integration
+- [x] T028a Implement Chainlit wait mode with POST /chat/wait integration in frontend/modes/wait_mode.py
+- [x] T028b Add request/response handling and error display for wait mode
+- [x] T028c Implement loading states and user feedback for wait mode
+- [x] T029a Implement Chainlit streaming mode with SSE /chat/streaming integration in frontend/modes/streaming_mode.py
+- [x] T029b Add EventSource connection management and reconnection handling
+- [x] T029c Implement token-by-token message rendering with proper formatting
+- [x] T030 [P] Integration test end-to-end chat flow in tests/integration/test_e2e_flow.py
 
 ## Phase 3.5: Polish & Validation
-- [ ] T031 [P] Performance tests for <200ms streaming latency in tests/performance/test_streaming_perf.py
-- [ ] T032 [P] Unit tests for validation logic in tests/unit/test_validation.py
-- [ ] T033 [P] Update README with setup and demo instructions in README.md
-- [ ] T034 [P] Add API documentation with OpenAPI spec in docs/api.md
-- [ ] T035 [P] Add extensibility notes for v2 session management in docs/extensibility.md
-- [ ] T036 [P] Run quickstart validation scenarios in tests/manual/test_quickstart.py
+- [x] T031 [P] Performance tests for <200ms streaming latency in tests/performance/test_streaming_perf.py
+- [x] T032 [P] Unit tests for validation logic in tests/unit/test_validation.py
+- [x] T033 [P] Update README with setup and demo instructions in README.md
+- [x] T034 [P] Add API documentation with OpenAPI spec in docs/api.md
+- [x] T035 [P] Add extensibility notes for v2 session management in docs/extensibility.md
+- [x] T036 [P] Run quickstart validation scenarios in tests/manual/test_quickstart.py
 
 ## Dependencies
 ```
