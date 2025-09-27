@@ -1,8 +1,8 @@
 
-# Implementation Plan: [FEATURE]
+# Implementation Plan: Responsive Chat Interface
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
+**Branch**: `002-user-lands-on` | **Date**: 2025-01-27 | **Spec**: [spec.md](./spec.md)
+**Input**: Feature specification from `/specs/002-user-lands-on/spec.md`
 
 ## Execution Flow (/plan command scope)
 ```
@@ -31,20 +31,20 @@
 - Phase 3-4: Implementation execution (manual or via tools)
 
 ## Summary
-[Extract from feature spec: primary requirement + technical approach from research]
+Build a responsive chat interface using Next.js 15, Tailwind CSS, ShadCN/ui, and Framer Motion. Users land on `/chat` to see a mobile-first chat window where they can send messages and receive real-time streaming responses with typing indicators, error handling, and smooth animations. The interface supports server-side session persistence and auto-scrolling with pause-on-scroll behavior.
 
 ## Technical Context
-**Language/Version**: [e.g., Python 3.12+, TypeScript 5.0+, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, Next.js, shadcn/ui, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Package Manager**: [e.g., uv (Python), pnpm (JS/TS), Cargo (Rust) or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, Jest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM, Web (mobile-first) or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**UX Requirements**: [mobile-first, accessibility (WCAG 2.1 AA), animations, shadcn/ui or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: TypeScript 5.0+ with Next.js 15  
+**Primary Dependencies**: Next.js 15, Tailwind CSS, ShadCN/ui, Framer Motion, Server-Sent Events (SSE)  
+**Package Manager**: pnpm (JavaScript/TypeScript projects)  
+**Storage**: Server-side session storage (Redis/PostgreSQL for chat sessions)  
+**Testing**: Jest, Playwright (E2E), React Testing Library  
+**Target Platform**: Web (mobile-first responsive design)  
+**Project Type**: web (frontend-only with backend API integration)  
+**Performance Goals**: <200ms response time, 60fps animations, smooth streaming  
+**UX Requirements**: Mobile-first, WCAG 2.1 AA accessibility, shadcn/ui components, Framer Motion animations  
+**Constraints**: Real-time streaming, auto-scroll with pause, typing indicators, error recovery  
+**Scale/Scope**: Single chat interface, server-side session persistence, cross-device compatibility
 
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
@@ -56,10 +56,10 @@
 - Tests MUST be written before implementation (TDD)
 
 **Architecture Gates:**
-- All FastAPI endpoints MUST be async functions
-- Clear separation between UI (Chainlit/Next.js), Agent logic (OpenAI Agents SDK), and API layers
-- Async database drivers and HTTP clients MUST be used
+- Clear separation between UI (Next.js), streaming logic (SSE), and backend API layers
+- Async HTTP clients and streaming connections MUST be used
 - Response times under 200ms for 95th percentile
+- Server-Sent Events for real-time streaming
 
 **CLI-First Gates:**
 - All projects MUST be initialized using CLI tools (pnpm create, uv init --package)
@@ -92,50 +92,43 @@ specs/[###-feature]/
 ```
 
 ### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
 ```
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
-
-tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+chat-ui/                          # Next.js 15 frontend application
+├── app/
+│   ├── chat/
+│   │   └── page.tsx             # Main chat page
+│   ├── globals.css              # Global styles with Tailwind
+│   └── layout.tsx               # Root layout
+├── components/
+│   ├── chat/
+│   │   ├── ChatContainer.tsx    # Main chat container
+│   │   ├── ChatInput.tsx        # Message input with send button
+│   │   ├── ChatMessage.tsx      # Message bubble component
+│   │   ├── TypingIndicator.tsx  # Animated typing indicator
+│   │   └── ErrorBanner.tsx      # Error display component
+│   └── ui/                      # ShadCN/ui components
+│       ├── button.tsx
+│       ├── input.tsx
+│       ├── card.tsx
+│       └── scroll-area.tsx
+├── hooks/
+│   └── useChatStream.ts         # SSE streaming hook
+├── lib/
+│   ├── utils.ts                 # Utility functions
+│   └── types.ts                 # TypeScript type definitions
+├── tests/
+│   ├── e2e/                     # Playwright E2E tests
+│   │   └── chat.spec.ts
+│   └── unit/                    # Jest unit tests
+│       ├── components/
+│       └── hooks/
+├── package.json
+├── tailwind.config.js
+├── next.config.js
+└── components.json              # ShadCN/ui config
 ```
 
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
+**Structure Decision**: Frontend-only Next.js application with component-based architecture. Uses ShadCN/ui for consistent design system and Framer Motion for animations. Separates concerns with dedicated hooks for streaming logic and organized component structure.
 
 ## Phase 0: Outline & Research
 1. **Extract unknowns from Technical Context** above:
@@ -202,12 +195,33 @@ directories captured above]
 - Each user story → integration test task
 - Implementation tasks to make tests pass
 
+**CLI-First Implementation Strategy**:
+- Bootstrap Next.js app with `pnpm create next-app@latest`
+- Initialize ShadCN/ui with `pnpm dlx shadcn@latest init`
+- Install dependencies with `pnpm add framer-motion`
+- All setup steps executable via CLI commands
+
+**UX-First Implementation Strategy**:
+- Mobile-first responsive design with Tailwind breakpoints
+- ShadCN/ui components for consistent design system
+- Framer Motion animations for smooth transitions
+- WCAG 2.1 AA accessibility compliance
+- Real UX flows established before test generation
+
 **Ordering Strategy**:
 - TDD order: Tests before implementation 
-- Dependency order: Models before services before UI
+- CLI setup → Components → Hooks → Integration → E2E
 - Mark [P] for parallel execution (independent files)
+- UX implementation after core functionality
 
-**Estimated Output**: 25-30 numbered, ordered tasks in tasks.md
+**Estimated Output**: 30-35 numbered, ordered tasks in tasks.md covering:
+- CLI project setup and ShadCN/ui initialization
+- Component development with TypeScript and Tailwind
+- SSE streaming hook implementation
+- Framer Motion animation integration
+- Mobile-first responsive design
+- Accessibility implementation
+- E2E testing with Playwright
 
 **IMPORTANT**: This phase is executed by the /tasks command, NOT by /plan
 
@@ -231,18 +245,18 @@ directories captured above]
 *This checklist is updated during execution flow*
 
 **Phase Status**:
-- [ ] Phase 0: Research complete (/plan command)
-- [ ] Phase 1: Design complete (/plan command)
-- [ ] Phase 2: Task planning complete (/plan command - describe approach only)
+- [x] Phase 0: Research complete (/plan command)
+- [x] Phase 1: Design complete (/plan command)
+- [x] Phase 2: Task planning complete (/plan command - describe approach only)
 - [ ] Phase 3: Tasks generated (/tasks command)
 - [ ] Phase 4: Implementation complete
 - [ ] Phase 5: Validation passed
 
 **Gate Status**:
-- [ ] Initial Constitution Check: PASS
-- [ ] Post-Design Constitution Check: PASS
-- [ ] All NEEDS CLARIFICATION resolved
-- [ ] Complexity deviations documented
+- [x] Initial Constitution Check: PASS
+- [x] Post-Design Constitution Check: PASS
+- [x] All NEEDS CLARIFICATION resolved
+- [x] Complexity deviations documented
 
 ---
 *Based on Constitution v1.1.0 - See `/memory/constitution.md`* 

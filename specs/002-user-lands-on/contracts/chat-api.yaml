@@ -1,0 +1,338 @@
+openapi: 3.0.3
+info:
+  title: Chat Interface API
+  description: API for responsive chat interface with real-time streaming
+  version: 1.0.0
+  contact:
+    name: Chat Interface Team
+    email: team@example.com
+
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+  - url: https://api.example.com
+    description: Production server
+
+paths:
+  /chat/session:
+    post:
+      summary: Create new chat session
+      description: Creates a new chat session for the user
+      operationId: createChatSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSessionRequest'
+      responses:
+        '201':
+          description: Session created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /chat/session/{sessionId}:
+    get:
+      summary: Get chat session
+      description: Retrieves an existing chat session with message history
+      operationId: getChatSession
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Unique session identifier
+      responses:
+        '200':
+          description: Session retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatSession'
+        '404':
+          description: Session not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /chat/session/{sessionId}/message:
+    post:
+      summary: Send message
+      description: Sends a user message to the chat session
+      operationId: sendMessage
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Unique session identifier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+      responses:
+        '200':
+          description: Message sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessage'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Session not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /chat/session/{sessionId}/stream:
+    get:
+      summary: Stream assistant response
+      description: Streams assistant response via Server-Sent Events
+      operationId: streamAssistantResponse
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Unique session identifier
+        - name: messageId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: ID of the user message to respond to
+      responses:
+        '200':
+          description: Streaming response
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                description: Server-Sent Events stream
+              examples:
+                typing_start:
+                  summary: Typing indicator starts
+                  value: |
+                    event: typing_start
+                    data: {"messageId": "msg-123", "sessionId": "session-456"}
+                message_chunk:
+                  summary: Message content chunk
+                  value: |
+                    event: message_chunk
+                    data: {"content": "Hello", "messageId": "msg-123"}
+                message_complete:
+                  summary: Message complete
+                  value: |
+                    event: message_complete
+                    data: {"messageId": "msg-123", "content": "Hello world!"}
+                error:
+                  summary: Streaming error
+                  value: |
+                    event: error
+                    data: {"error": "Connection lost", "retry": true}
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Session not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    ChatSession:
+      type: object
+      required:
+        - id
+        - createdAt
+        - lastActivityAt
+        - isActive
+        - deviceInfo
+        - messages
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique session identifier
+        userId:
+          type: string
+          nullable: true
+          description: Associated user ID (null for anonymous)
+        createdAt:
+          type: string
+          format: date-time
+          description: Session creation timestamp
+        lastActivityAt:
+          type: string
+          format: date-time
+          description: Last message or interaction time
+        isActive:
+          type: boolean
+          description: Whether session is currently active
+        deviceInfo:
+          $ref: '#/components/schemas/DeviceInfo'
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessage'
+          description: Array of messages in this session
+
+    ChatMessage:
+      type: object
+      required:
+        - id
+        - content
+        - timestamp
+        - senderType
+        - status
+        - sessionId
+        - isTyping
+      properties:
+        id:
+          type: string
+          description: Unique message identifier
+        content:
+          type: string
+          description: Message text content
+        timestamp:
+          type: string
+          format: date-time
+          description: When the message was created
+        senderType:
+          type: string
+          enum: [user, assistant]
+          description: Who sent the message
+        status:
+          type: string
+          enum: [sending, sent, failed, streaming]
+          description: Current message state
+        sessionId:
+          type: string
+          format: uuid
+          description: Associated chat session
+        isTyping:
+          type: boolean
+          description: Whether this is a typing indicator
+
+    DeviceInfo:
+      type: object
+      required:
+        - userAgent
+        - screenSize
+        - isMobile
+        - platform
+      properties:
+        userAgent:
+          type: string
+          description: Browser user agent string
+        screenSize:
+          type: object
+          required: [width, height]
+          properties:
+            width:
+              type: number
+              minimum: 1
+              description: Screen width in pixels
+            height:
+              type: number
+              minimum: 1
+              description: Screen height in pixels
+        isMobile:
+          type: boolean
+          description: Whether device is mobile
+        platform:
+          type: string
+          description: Operating system platform
+
+    CreateSessionRequest:
+      type: object
+      required:
+        - deviceInfo
+      properties:
+        userId:
+          type: string
+          nullable: true
+          description: User ID if authenticated
+        deviceInfo:
+          $ref: '#/components/schemas/DeviceInfo'
+
+    SendMessageRequest:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+          minLength: 1
+          description: Message content (no length limits)
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error type
+        message:
+          type: string
+          description: Human-readable error message
+        retry:
+          type: boolean
+          description: Whether the operation can be retried
+        details:
+          type: object
+          description: Additional error details

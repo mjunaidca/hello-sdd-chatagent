@@ -82,6 +82,13 @@ When creating this spec from a user prompt:
 - **[Entity 1]**: [What it represents, key attributes without implementation]
 - **[Entity 2]**: [What it represents, relationships to other entities]
 
+### UX Requirements *(include if feature involves user interface)*
+- **Mobile-First Design**: Interface MUST be designed mobile-first with responsive breakpoints
+- **Accessibility**: Interface MUST meet WCAG 2.1 AA standards with proper ARIA labels and keyboard navigation
+- **Design System**: Use shadcn/ui components for consistent design patterns
+- **Animations**: Smooth, purposeful animations for state transitions and user feedback
+- **User Testing**: Real UX flows MUST be established before placeholder test generation
+
 ---
 
 ## Review & Acceptance Checklist

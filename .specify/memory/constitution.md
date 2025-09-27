@@ -1,19 +1,21 @@
 <!-- Sync Impact Report
-Version change: template → 1.0.0
+Version change: 1.0.0 → 1.1.0
 Modified principles:
-- [PRINCIPLE_1_NAME] → I. Code Quality & Testing Standards (NON-NEGOTIABLE)
-- [PRINCIPLE_2_NAME] → II. Async-First Architecture
-- [PRINCIPLE_3_NAME] → III. Clean Architecture Separation
-- [PRINCIPLE_4_NAME] → IV. Security & Reliability
-- [PRINCIPLE_5_NAME] → V. Extensibility & Performance
+- I. Code Quality & Testing Standards → I. Code Quality & Testing Standards (NON-NEGOTIABLE)
+- II. Async-First Architecture → II. Async-First Architecture
+- III. Clean Architecture Separation → III. Clean Architecture Separation
+- IV. Security & Reliability → IV. Security & Reliability
+- V. Extensibility & Performance → V. Extensibility & Performance
 Added sections:
+- VI. CLI-First Development (NEW)
+- VII. UX-First Design (NEW)
 - Development Standards (Technology Stack Requirements, Code Organization)
 - Quality Assurance (Testing Requirements, Code Review Standards)
-Removed sections: None (new constitution)
+Removed sections: None
 Templates requiring updates:
 - ✅ .specify/templates/plan-template.md (Constitution Check gates updated, version reference updated)
-- ✅ .specify/templates/tasks-template.md (already aligned with TDD principles - no changes needed)
-- ✅ .specify/templates/spec-template.md (no changes needed - already generic)
+- ✅ .specify/templates/tasks-template.md (CLI setup tasks added, UX testing approach updated)
+- ✅ .specify/templates/spec-template.md (UX requirements section added)
 - ⚠ .specify/templates/commands/ (directory does not exist yet)
 Follow-up TODOs: None - all placeholders resolved
 -->
@@ -67,11 +69,31 @@ System MUST be designed for easy extension of new endpoints and agent capabiliti
 - **Scalability**: Architecture MUST support horizontal scaling and handle increased load through efficient resource utilization.
 - **Monitoring**: Comprehensive logging and metrics MUST be implemented for performance monitoring and debugging.
 
+### VI. CLI-First Development
+All projects MUST be initialized and managed through command-line interfaces to ensure consistent, reproducible development environments.
+
+- **Project Initialization**: All new projects MUST be created using CLI tools (`pnpm create next-app@latest`, `pnpm dlx shadcn@latest init`, `uv init --package`).
+- **Package Management**: Use **pnpm** package manager for all JavaScript/TypeScript projects (not npm or yarn).
+- **Python Projects**: Use **uv** package manager for all Python projects with `uv init --package` for packaged applications.
+- **CLI Tools**: Prefer CLI-based tooling over GUI alternatives for consistency and automation.
+- **Reproducible Setup**: All setup instructions MUST be executable via CLI commands with no manual steps.
+
+### VII. UX-First Design
+All user interfaces MUST prioritize exceptional user experience with mobile-first, accessible, and animated designs.
+
+- **Mobile-First Layouts**: All UI components MUST be designed mobile-first with responsive breakpoints for larger screens.
+- **Accessibility**: All interfaces MUST meet WCAG 2.1 AA standards with proper ARIA labels, keyboard navigation, and screen reader support.
+- **Animations**: Smooth, purposeful animations MUST be implemented for state transitions and user feedback.
+- **Design System**: Use **shadcn/ui** components to minimize boilerplate and ensure consistent design patterns.
+- **User Testing**: Real UX flows MUST be established before generating placeholder tests - avoid test generation until actual user interactions are defined.
+
 ## Development Standards
 
 ### Technology Stack Requirements
 - **Python 3.12+** with uv package manager for dependency management
+- **JavaScript/TypeScript** with pnpm package manager for frontend projects
 - **FastAPI** with async support for API layer
+- **Next.js** with shadcn/ui for modern web interfaces
 - **Chainlit** for user interface components
 - **OpenAI Agents SDK** for agent logic framework
 - **PostgreSQL** with async drivers for data persistence
@@ -124,4 +146,4 @@ This constitution establishes the foundational principles and standards for the 
 - **Template Alignment**: All project templates and tooling MUST remain synchronized with constitutional principles
 - **Training**: New team members MUST be trained on constitutional principles before contributing
 
-**Version**: 1.0.0 | **Ratified**: 2025-09-26 | **Last Amended**: 2025-09-26
+**Version**: 1.1.0 | **Ratified**: 2025-09-26 | **Last Amended**: 2025-01-27
